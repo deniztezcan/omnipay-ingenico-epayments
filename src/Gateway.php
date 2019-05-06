@@ -9,14 +9,14 @@
 
 namespace Omnipay\IngenicoePayments;
 
-use Omnipay\Common\AbstractGateway;
 use Omnipay\IngenicoePayments\Message\Request\Purchase;
 use Omnipay\IngenicoePayments\Message\Request\CompletePurchase;
 
 class Gateway extends AbstractGateway
 {
 
-	public function getName() {
+	public function getName()
+    {
         return 'IngenicoePayments';
     }
 
@@ -26,10 +26,8 @@ class Gateway extends AbstractGateway
             "mode"					=> "",
             "PSPID"					=> "",
             "language"				=> "",
-            "paymentURL"			=> "",
             "shaIn"					=> "",
             "shaOut"				=> "",
-            "homeUrl"				=> "",
         ];
     }
 
@@ -42,3 +40,5 @@ class Gateway extends AbstractGateway
     {
         return $this->createRequest(CompletePurchase::class, $parameters);
     }
+
+}

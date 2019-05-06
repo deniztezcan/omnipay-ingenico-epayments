@@ -15,5 +15,13 @@ use Exception;
 
 class Purchase extends AbstractRequest
 {	
-
+	public function getData()
+    {
+        $data = $this->getBaseData();
+        return $data;
+    }
+    
+    public function createResponse($data){
+        return new PurchaseResponse($this, $data);
+    }
 }

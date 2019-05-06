@@ -48,16 +48,6 @@ abstract class AbstractRequest extends CommonAbstractRequest
         return $this->setParameter('language', $value);
     }
 
-   public function getPaymentURL()
-    {
-        return $this->getParameter('paymentURL');
-    }
-
-    public function setPaymentURL($value)
-    {
-        return $this->setParameter('paymentURL', $value);
-    }
-
     public function getShaIn()
     {
         return $this->getParameter('shaIn');
@@ -76,26 +66,6 @@ abstract class AbstractRequest extends CommonAbstractRequest
     public function setShaOut($value)
     {
         return $this->setParameter('shaOut', $value);
-    }
-
-    public function getHomeUrl()
-    {
-        return $this->getParameter('homeURL');
-    }
-
-    public function setHomeUrl($value)
-    {
-        return $this->setParameter('homeURL', $value);
-    }
-
-    public function getOrderID()
-    {
-        return $this->getParameter('order_id');
-    }
-
-    public function setOrderID($value)
-    {
-        return $this->setParameter('order_id', $value);
     }
 
     public function getBrand()
@@ -118,57 +88,80 @@ abstract class AbstractRequest extends CommonAbstractRequest
         return $this->setParameter('payment_method', $value);
     }
 
-    public function getSignature($xml)
+    public function getSignature()
     {
         $signature = "";
         $signature.= 'ACCEPTURL=' . $this->getReturnUrl() . $this->getShaIn();
         $signature.= 'AMOUNT=' . number_format($this->getAmount()*100, 0, '', '') . $this->getShaIn();
         $signature.= 'BACKURL=' . $this->getCancelUrl() . $this->getShaIn();
         if($this->getBrand() != ""){
-            $signature.= 'BRAND=' .  . $this->getShaIn();
+            $signature.= 'BRAND=' . $this->getBrand() . $this->getShaIn();
         }
         $signature.= 'CANCELURL=' . $this->getCancelUrl() . $this->getShaIn();
-        $signature.= 'CATALOGURL=' . $this->getHomeUrl() . $this->getShaIn();
-        $signature.= 'CN=' . $this->getCard()->getFirstName() . " " . $this->getCard()->getLastName() . $this->getShaIn();
+        $signature.= 'CATALOGURL=' . $this->getReturnUrl() . $this->getShaIn();
+        $signature.= 'CN=' . $this->getCard()->getFirstName() . ' ' . $this->getCard()->getLastName() . $this->getShaIn();
         $signature.= 'COM=' . $this->getDescription() . $this->getShaIn();
         $signature.= 'CURRENCY=' . $this->getCurrency() . $this->getShaIn();
         $signature.= 'DECLINEURL=' . $this->getCancelUrl() . $this->getShaIn();
-        $signature.= 'EMAIL=' . $this->getCard()-> . $this->getShaIn();
+        $signature.= 'EMAIL=' . $this->getCard()->getEmail() . $this->getShaIn();
         $signature.= 'EXCEPTIONURL=' . $this->getCancelUrl() . $this->getShaIn();
-        $signature.= 'HOMEURL=' . $this->getHomeUrl() . $this->getShaIn();
+        $signature.= 'HOMEURL=' . $this->getReturnUrl() . $this->getShaIn();
         $signature.= 'LANGUAGE=' . $this->getLanguage() . $this->getShaIn();
-        $signature.= 'ORDERID=' . $this->getOrderID() . $this->getShaIn();
+        $signature.= 'ORDERID=' . $this->getTransactionId() . $this->getShaIn();
         $signature.= 'OWNERADDRESS=' . $this->getCard()->getBillingAddress1() . $this->getShaIn();
         $signature.= 'OWNERTELNO=' . $this->getCard()->getBillingPhone() . $this->getShaIn();
         $signature.= 'OWNERTOWN=' . $this->getCard()->getBillingCity() . $this->getShaIn();
         $signature.= 'OWNERZIP=' . $this->getCard()->getBillingPostcode() . $this->getShaIn();
         $signature.= 'PM=' . $this->getPaymentMethod() . $this->getShaIn();
         $signature.= 'PSPID=' . $this->getPSPID() . $this->getShaIn();
-        return sha1($signature);
+        return $signature;
     }
     
 
-    public function getBaseData($type, $name, $config)
+    public function getBaseData()
     {
-        $this->validate('acquirer', 'testMode', 'merchantId', 'subId', 'privateCerPath', 'privateKeyPath', 'privateKeyPassphrase');
-        
-        return $data;
+
+        $form_html = '<form method="post" action="'.$this->getEndpoint().'" id="form1" name="form1">';
+        $form_html.= '<input type="hidden" name="PSPID" value="'.$this->getPSPID().'">';
+        $form_html.= '<input type="hidden" name="ORDERID" value="'.$this->getTransactionId().'">';
+        $form_html.= '<input type="hidden" name="AMOUNT" value="'.number_format($this->getAmount()*100, 0, '', '').'">';
+        $form_html.= '<input type="hidden" name="CURRENCY" value="'.$this->getCurrency().'">';
+        $form_html.= '<input type="hidden" name="LANGUAGE" value="'.$this->getLanguage().'">';
+        $form_html.= '<input type="hidden" name="CN" value="'.$this->getCard()->getFirstName() . ' ' . $this->getCard()->getLastName().'">';
+        $form_html.= '<input type="hidden" name="EMAIL" value="'.$this->getCard()->getEmail().'">';
+        $form_html.= '<input type="hidden" name="OWNERZIP" value="'.$this->getCard()->getBillingPostcode().'">';
+        $form_html.= '<input type="hidden" name="OWNERADDRESS" value="'.$this->getCard()->getBillingAddress1().'">';
+        $form_html.= '<input type="hidden" name="OWNERTOWN" value="'.$this->getCard()->getBillingCity().'">';
+        $form_html.= '<input type="hidden" name="OWNERTELNO" value="'.$this->getCard()->getBillingPhone().'">';
+        $form_html.= '<input type="hidden" name="COM" value="'.$this->getDescription().'">';
+        $form_html.= '<input type="hidden" name="SHASIGN" value="'.hash("sha256", $this->getSignature()).'">';
+        $form_html.= '<input type="hidden" name="PM" value="'.$this->getPaymentMethod().'">';
+        if($this->getBrand() != ""){
+            $form_html.= '<input type="hidden" name="BRAND" value="'.$this->getBrand().'">';
+        }
+        $form_html.= '<input type="hidden" name="ACCEPTURL" value="'.$this->getReturnUrl().'">';
+        $form_html.= '<input type="hidden" name="DECLINEURL" value="'.$this->getCancelUrl().'">';
+        $form_html.= '<input type="hidden" name="EXCEPTIONURL" value="'.$this->getCancelUrl().'">';
+        $form_html.= '<input type="hidden" name="CANCELURL" value="'.$this->getCancelUrl().'">';
+        $form_html.= '<input type="hidden" name="BACKURL" value="'.$this->getCancelUrl().'">';
+        $form_html.= '<input type="hidden" name="HOMEURL" value="'.$this->getReturnUrl().'">';
+        $form_html.= '<input type="hidden" name="CATALOGURL" value="'.$this->getReturnUrl().'">';
+        $form_html.= '</form>';
+
+        $form_script = '<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>';
+        $form_script.= '<script type="text/javascript">';
+        $form_script.= '$( document ).ready(function() {';
+        $form_script.= '$( "#form1" ).submit();';
+        $form_script.= '});';
+        $form_script.= '</script>';
+
+        return $form_html.$form_script;
     }
     
     public function sendData($data)
     {  
-        $response = $this->httpClient->request(
-            'POST',
-            $this->getEndpoint(),
-            [
-                'Content-Type' => 'application/json'
-            ],
-            $data
-        );
-
-        var_dump($response);exit;
-
-        return $this->createResponse($response->getBody()->getContents());
+        echo $data;
+        exit;
     }
 
     abstract public function createResponse($payload);
