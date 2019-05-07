@@ -88,6 +88,26 @@ abstract class AbstractRequest extends CommonAbstractRequest
         return $this->setParameter('payment_method', $value);
     }
 
+    public function getStatus()
+    {
+        return $this->getParameter('status');
+    }
+
+    public function setStatus($value)
+    {
+        return $this->setParameter('status', $value);
+    }
+
+    public function getTransaction()
+    {
+        return $this->getParameter('transaction');
+    }
+
+    public function setTransaction($value)
+    {
+        return $this->setParameter('transaction', $value);
+    }
+
     public function getSignature()
     {
         $signature = "";
@@ -160,8 +180,11 @@ abstract class AbstractRequest extends CommonAbstractRequest
     
     public function sendData($data)
     {  
-        echo $data;
-        exit;
+        if(is_string($data)){
+            echo $data;exit;
+        }else{
+            return $this->createResponse($data);
+        }
     }
 
     abstract public function createResponse($payload);

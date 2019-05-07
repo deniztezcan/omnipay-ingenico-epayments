@@ -22,6 +22,6 @@ class Purchase extends AbstractRequest
     }
     
     public function createResponse($data){
-        return new PurchaseResponse($this, $data);
+        return null;
     }
 }

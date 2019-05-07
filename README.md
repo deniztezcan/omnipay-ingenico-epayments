@@ -1,6 +1,6 @@
 # Omnipay: Ingenico ePayments
 
-**Ingenico ePayments driver for the Omnipay PHP payment processing library**
+**Ingenico ePayments driver (e-Commerce) for the Omnipay PHP payment processing library**
 
 [![Latest Stable Version](https://poser.pugx.org/deniztezcan/omnipay-ingenico-epayments/v/stable)](https://packagist.org/packages/deniztezcan/omnipay-ingenico-epayments) 
 [![Total Downloads](https://poser.pugx.org/deniztezcan/omnipay-ingenico-epayments/downloads)](https://packagist.org/packages/deniztezcan/omnipay-ingenico-epayments) 
@@ -61,6 +61,27 @@ $response = $request->send();
 You will be transfered to the e-Commerce page of Ingenico.
 
 ## Complete a Payment
+
+```php
+use Omnipay\Omnipay;
+
+$gateway = Omnipay::create('IngenicoePayments');
+
+$gateway->setMode('test');
+$gateway->setPSPID('PSID');
+$gateway->setLanguage('nl_NL');
+$gateway->setShaIn('SHAIN');
+$gateway->setShaOut('SHAOUT');
+
+$request = $gateway->completePurchase(['transaction' => $_GET]);
+$response = $request->send();
+
+if ($response->isSuccessful()) {
+	echo $response->getTransactionId();
+}else{
+	echo $response->getError();
+}
+```
 
 ## Support
 
