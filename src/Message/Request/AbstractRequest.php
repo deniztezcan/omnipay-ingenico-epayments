@@ -112,7 +112,7 @@ abstract class AbstractRequest extends CommonAbstractRequest
     {
         $signature = "";
         $signature.= 'ACCEPTURL=' . $this->getReturnUrl() . $this->getShaIn();
-        $signature.= 'AMOUNT=' . number_format($this->getAmount()*100, 0, '', '') . $this->getShaIn();
+        $signature.= 'AMOUNT=' . $this->getAmount() . $this->getShaIn();
         $signature.= 'BACKURL=' . $this->getCancelUrl() . $this->getShaIn();
         if($this->getBrand() != ""){
             $signature.= 'BRAND=' . $this->getBrand() . $this->getShaIn();
@@ -144,7 +144,7 @@ abstract class AbstractRequest extends CommonAbstractRequest
         $form_html = '<form method="post" action="'.$this->getEndpoint().'" id="form1" name="form1">';
         $form_html.= '<input type="hidden" name="PSPID" value="'.$this->getPSPID().'">';
         $form_html.= '<input type="hidden" name="ORDERID" value="'.$this->getTransactionId().'">';
-        $form_html.= '<input type="hidden" name="AMOUNT" value="'.number_format($this->getAmount()*100, 0, '', '').'">';
+        $form_html.= '<input type="hidden" name="AMOUNT" value="'.$this->getAmount().'">';
         $form_html.= '<input type="hidden" name="CURRENCY" value="'.$this->getCurrency().'">';
         $form_html.= '<input type="hidden" name="LANGUAGE" value="'.$this->getLanguage().'">';
         $form_html.= '<input type="hidden" name="CN" value="'.$this->getCard()->getFirstName() . ' ' . $this->getCard()->getLastName().'">';
