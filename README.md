@@ -53,9 +53,13 @@ $request = $gateway->purchase([
 		'city'				=> 'city',
 		'phone'				=> 'phone',
 		'email'				=> 'email'
+	],
+	'customfields' => [
+		'XX' => 'XX',
 	]
 ]);
 $response = $request->send();
+$response->redirect();
 ```
 
 You will be transfered to the e-Commerce page of Ingenico.

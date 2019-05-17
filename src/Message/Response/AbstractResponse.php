@@ -3,7 +3,7 @@
  * Purchase | src/Message/Response/Purchase.php.
  *
  * @author      Deniz Tezcan <howdy@deniztezcan.me>
- * @package		Omnipay-IngenicoePayments
+ * @package		Omnipay-iDeal
  * @since       v0.1
  */
 

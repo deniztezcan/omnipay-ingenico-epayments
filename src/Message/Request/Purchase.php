@@ -11,6 +11,7 @@ namespace Omnipay\IngenicoePayments\Message\Request;
 
 use Carbon\Carbon;
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\IngenicoePayments\Message\Response\Purchase as PurchaseResponse;
 use Exception;
 
 class Purchase extends AbstractRequest
@@ -22,6 +23,6 @@ class Purchase extends AbstractRequest
     }
     
     public function createResponse($data){
-        return null;
+        return new PurchaseResponse($this, $data);
     }
 }
