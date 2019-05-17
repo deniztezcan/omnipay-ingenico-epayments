@@ -38,7 +38,7 @@ $gateway->setShaIn('SHAIN');
 $gateway->setShaOut('SHAOUT');
 
 $request = $gateway->purchase([
-	'amount' => 99.99, 
+	'amount' => 9999, 
 	'currency' => 'EUR', 
 	'returnUrl' => 'https://example.com/tmp/done',
 	'cancelUrl' => 'https://example.com/tmp/cancel', 
