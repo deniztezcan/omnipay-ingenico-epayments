@@ -68,6 +68,16 @@ class AbstractGateway extends CommonAbstractGateway{
         return $this->setParameter('shaOut', $value);
     }
 
+    public function getHashing()
+    {
+        return $this->getParameter('hashing');
+    }
+
+    public function setHashing($value)
+    {
+        return $this->setParameter('hashing', $value);
+    }
+
     public function getHomeUrl()
     {
         return $this->getParameter('homeURL');

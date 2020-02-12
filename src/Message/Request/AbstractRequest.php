@@ -68,6 +68,16 @@ abstract class AbstractRequest extends CommonAbstractRequest
         return $this->setParameter('shaOut', $value);
     }
 
+    public function getHashing()
+    {
+        return $this->getParameter('hashing');
+    }
+
+    public function setHashing($value)
+    {
+        return $this->setParameter('hashing', $value);
+    }
+
     public function getBrand()
     {
         return $this->getParameter('brand');
@@ -123,7 +133,7 @@ abstract class AbstractRequest extends CommonAbstractRequest
 
         $signature = [];
         $signature['ACCEPTURL'] = $this->getReturnUrl() . $this->getShaIn();
-        $signature['AMOUNT'] = number_format($this->getAmount(), 0, "", "") . $this->getShaIn();
+        $signature['AMOUNT'] = intval($this->getAmount()*100) . $this->getShaIn();
         $signature['BACKURL'] = $this->getCancelUrl() . $this->getShaIn();
         if($this->getBrand() != ""){
             $signature['BRAND'] = $this->getBrand() . $this->getShaIn();
@@ -160,7 +170,7 @@ abstract class AbstractRequest extends CommonAbstractRequest
     {
         $data = [];
         $data['ACCEPTURL'] = $this->getReturnUrl();
-        $data['AMOUNT'] = number_format($this->getAmount(), 0, "", "");
+        $data['AMOUNT'] = intval($this->getAmount()*100);
         $data['BACKURL'] = $this->getCancelUrl();
         if($this->getBrand() != ""){
             $data['BRAND'] = $this->getBrand();
@@ -182,7 +192,13 @@ abstract class AbstractRequest extends CommonAbstractRequest
         $data['OWNERZIP'] = $this->getCard()->getBillingPostcode();
         $data['PM'] = $this->getPaymentMethod();
         $data['PSPID'] = $this->getPSPID();
-        $data['SHASIGN'] = hash("sha256", $this->getSignature());
+        if($this->getHashing() == "SHA-1"){
+            $data['SHASIGN'] = sha1($this->getSignature());
+        }elseif($this->getHashing() == "SHA-256"){
+            $data['SHASIGN'] = hash("sha256", $this->getSignature());
+        }elseif($this->getHashing() == "SHA-512"){
+            $data['SHASIGN'] = hash("sha512", $this->getSignature());
+        }
 
         foreach ($this->getCustomfields() as $key => $value) {
             $data[$key] = $value;

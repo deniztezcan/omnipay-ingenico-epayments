@@ -36,6 +36,7 @@ $gateway->setPSPID('PSID');
 $gateway->setLanguage('nl_NL');
 $gateway->setShaIn('SHAIN');
 $gateway->setShaOut('SHAOUT');
+$gateway->setHashing('SHA-1');
 
 $request = $gateway->purchase([
 	'amount' => 9999, 
