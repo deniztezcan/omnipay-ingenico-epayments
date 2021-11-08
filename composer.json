@@ -12,7 +12,7 @@
         "epayments",
         "ingenico-epayments"
     ],
-    "version": "1.1.1",
+    "version": "1.1.2",
     "homepage": "https://github.com/deniztezcan/omnipay-ingenico-epayments",
     "license": "MIT",
     "authors": [
@@ -29,7 +29,7 @@
     },
     "require": {
         "league/omnipay": "^3",
-        "spatie/array-to-xml": "2.8.*",
+        "spatie/array-to-xml": "2.8.*|3.*.*",
         "nesbot/carbon": "2.*"
     },
     "require-dev": {
